@@ -21,42 +21,49 @@ Réalisez un dénombrement par classe de patient (`class`) des patients présent
 --->
 
 ```{r bar1}
-
+chart(data = ckd, ~ class %fill=% cad) +
+  geom_bar()
 ```
-
+On peut remarquer via ce graphique qu'aucune personne étant "notckd" n'ont de maladie de l'artère coronaire. Tandis qu'environ 25 personnes "ckd" ont une maladie de l'artère coronaire. Cela signifie qu'être "ckd" comporte plus de risque e développer une maladie de l'artère coronaire.
 <!--- Consignes
 Réalisez un dénombrement par classe de patient (`class`) des patients présentant ou non des amas de cellules de pus (`pcc`) en utilisant de la couleur. Utilisez l'argument `position = "dodge"` Décrivez votre graphique en maximum 5 phrases. 
 --->
 
 ```{r bar2}
-
+chart(data = ckd, ~ class %fill=% pcc) +
+  geom_bar(position = "dodge")
 ```
-
+On remarque clairement ici que les personnes "notckd" n'ont aucun amas de pus tandis qu'environ 50 personnes "ckd" ont un amas de pus. Mais environ 150 personnes "ckd" n'ont pas d'amas de pus cela signifie que plus ou moins un tier des presonnes "ckd" sont susceptibles d'avoir des amas de pus.
 <!--- Consignes
 Réalisez deux graphiques du dénombrement des hypertentions (`htn`) en distinguant par la couleur les patients présentants un diabète sucré (`dm`). Utilisez le facette pour réaliser ces graphiques par classe de patients (`class`). Pour le premier, utiliser l'argument position = "stack" (option par defaut). Pour le second, utiliser l'argument position = "fill".
 Décrivez vos graphiques en maximum 5 phrases. Que constatez-vous au niveau de l'axe des ordonnées ?   
 --->
 
 ```{r bar3}
-
+chart(data = ckd, ~ htn %fill=% dm) +
+  geom_bar(position = "stack")
+chart(data = ckd, ~ htn %fill=% class) +
+  geom_bar(position = "fill")
 ```
-
+Le premier graphique montre que peu de personnes souffrant d'hypertansion ont un diabète sucré mais plus de la moitié des personnes ayant de l'hypertension ont un diabète sucré. Le second graphique montre qu'aucune personne "ckd" a de l'hypertension tandis que plus de la moitié des personnes "notckd" n'ont pas d'hypertension. L'ordonnée du graphique 2 nous montre le pourcentage de personnes en hypertension, le premier nous montre le nombre exact de personnes.
 <!--- Consignes
 Réalisez un graphique en barres de la moyenne de la concentration en urée sanguine (`bu`) en fonction de la classe (`class`). Décrivez votre graphique en maximum 5 phrases. 
 --->
 
 ```{r bar4}
-
+chart(data = ckd, bu ~ class) +
+  stat_summary(geom = "col", fun = "mean")
 ```
-
+On remarque que les personnes "ckd" ont beaucoup (plus du double) d'urée sanguine comparé aux personnes "notckd". Cela doit surement signifier que la fonction rénale des personnes "ckd" est beaucoup moins efficace que les personnes"notckd".
 <!--- Consignes
 Réalisez des boites de dispersion de la glycémie (`bgr`) en fonction de la classe (`class`). Décrivez le en maximum 5 phrases.
 --->
 
 ```{r boxplot1}
-
+chart(data = ckd, bgr ~ class) +
+  geom_boxplot()
 ```
-
+On peut remarquer que la moyenne de la glycémie chez les personnes "ckd" est à environ 150 tandis que pour les personnes "notckd" elle est à environ 100. On peut aussi noter que la différence entre la valeur la plus haute de glycémie et la plus basse est d'nviron 100 pour les "ckd" et d'nviron 20 pour les "notckd".
 <!--- Consignes
 Réalisez des boites de dispersion de la concentration en sodium (`sod`) en fonction de la classe (`class`) et de l'hypertension (`htn`) en couleur. Indiquez le nombre d'observation sur votre graphiques. Décrivez le en maximum 5 phrases.  
 --->
@@ -64,26 +71,38 @@ Réalisez des boites de dispersion de la concentration en sodium (`sod`) en fonc
 ```{r boxplot2}
 give_n <- function(x)
   c(y = max(x) * 1.1, label = length(x)) 
-
+chart(data = ckd, sod ~ class %fill=% htn) +
+  geom_boxplot() +
+   stat_summary(fun.data = give_n, geom = "text", hjust = 0.5)
 ```
-
+Ce graphique nous montre que le même nombre de personnes "ckd" ont ou non del'hypertension. Tandis qu'aucune personnes "notckd" n'a de l'hypertension. Pour les personnes "ckd" on peut également noter que les personnes ayant de l'hypertension ont un taux de sodium plus faible que celle qui n'ont pas d'hypertension.
 <!--- Consignes
 Réalisez deux boites de dispersion, l'une représentant le nombre de globule blanc (`wc`) et l'autre le nombre de globule rouge (`rc`) en fonction de la classe (`class`). Ajoutez de la couleur en fonction de la classe. Assemblez ces deux graphiques sur un seul et décrivez les en maximum 5 phrases.  
 --->
 
 ```{r boxplot3}
+a <- chart(data = ckd, wc ~ class %col=% class) +
+  geom_boxplot()
 
+b <- chart(data = ckd, rc ~ class %col=% class) +
+  geom_boxplot()
+combine_charts(list(a, b), common.legend = TRUE)
 ```
-
+Ce graphique nous montre qu'en comparaison, les personnes "ckd" ont plus de globules blancs que les personnes "notckd" mais ont moins de globules rouges que les "notckd".
 <!--- Consinges
 C'est maintenant à vous de jouez. Réalisez et commentez deux nouveaux graphiques (un graphique en barre et une boite de dispersion) à partir du jeu de données `ckd`.
 --->
 
 ```{r perso1}
-
+a <- chart(data = ckd, ~ wc %fill=% class) +
+  geom_bar()
+b <- chart(data = ckd, ~ pcc %fill=% class) +
+  geom_bar()
+combine_charts(list(a,b), common.legend = TRUE)
 ```
-
+Les personnes "ckd" ont une grande présence de grlobule blancs et on en parallèle (chez tous les individus "ckd") une présence d'amas de pus pour une trentaine d'individus. Pour les "notckd", on à une absence complète d'amas de pus pour un nombre de globules blancs plus petit que pour les individus "cdk".
 ```{r perso2}
-
+chart(data = ckd, rc ~ bu %fill=% class) +
+  geom_boxplot()
 ```
-
+On peut observer sur le graphique que pour les individus "notckd", le nombre de globules rouge est plus grand que pour les individus "ckd". En parallèle, le taux d'urée sanguine est plus grand pour les personnes "ckd" que pour les "notckd". On peut en conclure que plus il y a d'urée dans le sang, moins il y a de globules rouges.
