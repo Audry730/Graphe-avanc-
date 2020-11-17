@@ -60,8 +60,15 @@ Réalisez des boites de dispersion de la glycémie (`bgr`) en fonction de la cla
 --->
 
 ```{r boxplot1}
-chart(data = ckd, bgr ~ class) +
-  geom_boxplot()
+library(ggplot2)
+theme_set(theme_classic())
+
+g <- ggplot(ckd, aes(class, bgr))
+g + geom_boxplot(varwidth = T, fill = "plum") + 
+    labs(title = "Boite à dispersion", 
+         subtitle = "Différence entre personnes ckd et notckd point de vue glycémie",
+         x = "Classes",
+         y = "Glycémie [mg/dL]")
 ```
 On peut remarquer que la moyenne de la glycémie chez les personnes "ckd" est à environ 150 tandis que pour les personnes "notckd" elle est à environ 100. On peut aussi noter que la différence entre la valeur la plus haute de glycémie et la plus basse est d'nviron 100 pour les "ckd" et d'nviron 20 pour les "notckd".
 <!--- Consignes
